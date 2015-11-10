@@ -7,7 +7,9 @@ description:
 ---
 
 >一个很简单的括号语法检查器
+
 ## ***1.实现效果***
+
 首先我们先看一下我们实现的效果是什么样子的。
 ![](http://7xjtan.com1.z0.glb.clouddn.com/testHomework-1.png)
 我们要实现的功能如下，
@@ -39,7 +41,9 @@ description:
 4. 最后就是最核心的检查功能了，我们把他封装成**CheckUtil**类；这个类实现检测功能和错误信息生成功能；
 
 ## ***4.具体实现***
+
 >SymbolEntity.java类
+
 ```java
 public class SymbolEntity {
 	private String symbol;
@@ -71,7 +75,9 @@ public class SymbolEntity {
 	}
 }
 ```
+
  >ErrorDescription.java类
+
  
 ```java
  public class ErrorDescription {
@@ -234,6 +240,7 @@ public class CheckUtil {
 ```
 
 >ReadFile.java类
+
 ```java
 import java.io.*;
 
