@@ -102,7 +102,16 @@ permalink: /pages/about.html
 				微博：
 			</td> 
 			<td>
-				<a href="{{ site.author.weibo }}" target="_blank">jimbo</a>
+				<a href="{{ site.author.weibo }}" target="_blank">jimbo&微博</a>
+			</td> 
+		</tr>
+
+		<tr>
+			<td>
+				知乎：
+			</td> 
+			<td>
+				<a href="{{ site.author.zhihu }}" target="_blank">jimbo&知乎</a>
 			</td> 
 		</tr>
 	</table>
@@ -121,7 +130,7 @@ permalink: /pages/about.html
 	<hr>
 	<br>
 	<p>
-	世界这么大 到处去看看
+		世界这么大 我想和你去看看		
 	</p>
 	<br>
 	<br> 
