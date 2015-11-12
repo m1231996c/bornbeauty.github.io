@@ -13,7 +13,7 @@ pygments: true
 # 作者信息
 author: 
   name: 钟金宝
-  email: zhongjinbao@outlook.com
+  email: zhongjinbao1994@gmail.com
   link: http://bornbeauty.github.io/
   weibo: http://weibo.com/u/3801921825
   github: https://github.com/bornbeauty
@@ -22,9 +22,12 @@ author:
   weibo_username:  xiao宝__
 
 # 站点信息
-title : 皇后镇
+title: 皇后镇
 description: 
-  愿你我既可朝九晚五 又可浪迹天涯
+ I will be kind to the weak.I will fight all who do wrong.<br>
+ I will fight for those who cannot fight.I will help those who call me for help.<br>
+ I will harm no woman.I will help my brother knight.<br>
+ I will be true to my friends.I will be faithful in love.
 url: http://bornbeauty.github.io/
 rss_url: /feed.xml
 

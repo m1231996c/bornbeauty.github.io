@@ -89,6 +89,7 @@ activity共有四种启动模式：
 **我们先看第一种-标准模式：**
 这是系统默认的启动方式。简单的说，每一个调用`startActivityForResult()`都会启动一个新的activity(`startActivity()也是去调用startActivityForResult()的`)，并且进入调用他的那个actiivty的任务栈的栈顶。
 很典型的一个例子，当我们使用ApplicationContext去启动一个标准启动模式的activity的模式是会失败的。我们往往得到这样的报错信息:
+
 >android.util.AndroidRuntimeException:Calling startActivity from outside of an activity context requires the FLAG_ACTIVITY_NEW_TASK flag. Is this really what you want?
 
 这个其实就很好理解了，standard启动模式的activity在启动的时候要进入任务栈，但是非activity的context又没有这个东西，自然就会处错了。解决办法就是在`intent`里面添加一个值为FLAG_ACTIVITY_NEW_TASK的flag就好了。这时候就是以singleTask模式来启动的activity。
