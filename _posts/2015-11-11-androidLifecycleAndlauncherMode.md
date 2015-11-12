@@ -10,6 +10,8 @@ description: double eleven happy to me
 
 参考书籍： [android开发艺术](http://book.douban.com/subject/26599538/)
 参考博客： [楚云之南-android的task任务栈](http://www.cnblogs.com/CSU-PL/p/3794280.html)
+　　　　　 [Activity的task相关](http://blog.csdn.net/liuhe688/article/details/6761337)
+　　　　　 [Activity的四种launchMode ](http://blog.csdn.net/liuhe688/article/details/6754323)
 
 
 ## 一.Activity的生命周期
@@ -63,6 +65,49 @@ onPostCreate()将会在activity加载完成后被调用(在onCreate()和onRestor
 ##### 7.onDestory()
 
 表示activity即将被销毁，这是最后一个回调，我们可以做一些回收和资源释放的工作。
+
+## 二.异常情况下Activity的生命周期
+
+我们这里说的异常主要包括两种情况：
+ - 资源相关的配置发生了变化导致了Activity被杀死并重新创建
+ - 在内存不足的情况下导致优先级比较低的Activity被杀死
+
+google给我们提供了`onSaveInstanceState()`和`onRestoreInstanceState()`这两个方法来保存我们的数据。
+***需要注意的是只有发生异常情况的时候才会调用这两个方法，如果是正常finish掉的话是不会被调用的***
+
+## 三.Activity的启动模式
+
+activity共有四种启动模式：
+- standard：标准模式
+- singleTop：栈顶复用模式
+- singleTask：栈内复用模式
+- singleInstance：单实例模式
+
+这里我们先要补充一个概念：任务栈(task stack)
+它是一个具有栈性质的activity的容器，用来存放多个activity实例。任何在系统中存活的activity都会交由任务栈去管理。至于任务栈和启动什么关系，我们待会会有详细介绍。
+
+**我们先看第一种-标准模式：**
+这是系统默认的启动方式。简单的说，每一个调用`startActivityForResult()`都会启动一个新的activity(`startActivity()也是去调用startActivityForResult()的`)，并且进入调用他的那个actiivty的任务栈的栈顶。
+很典型的一个例子，当我们使用ApplicationContext去启动一个标准启动模式的activity的模式是会失败的。我们往往得到这样的报错信息:
+>android.util.AndroidRuntimeException:Calling startActivity from outside of an activity context requires the FLAG_ACTIVITY_NEW_TASK flag. Is this really what you want?
+
+这个其实就很好理解了，standard启动模式的activity在启动的时候要进入任务栈，但是非activity的context又没有这个东西，自然就会处错了。解决办法就是在`intent`里面添加一个值为FLAG_ACTIVITY_NEW_TASK的flag就好了。这时候就是以singleTask模式来启动的activity。
+
+**第二种启动模式-栈顶复用模式**
+在这种模式下，如果要启动的activity已经处于任务栈的栈顶了，则去回调`oneNewIntent()`方法，而不是去新启动一个activity。但是如果actiivty没有处于栈顶则无法复用，系统会重新启动一个新的activity。
+
+**第三种启动模式-栈内复用模式**
+这是一种单例模式(相对于一个任务栈来说)，只要任务栈内存在这个activity的实例了，就会直接回调`onNewIntnet()`方法。同时需要注意，在该activity被复用的同时，位于它上方的activity都会被出栈销毁。
+举个列子，例如我们有ABCD四个activity位于同一个任务栈里面，A位于栈顶，D位于栈底端。如果此时以`singleTask`模式去启动D，这时候ABC都会出栈从而使得D出现在栈的顶端。如果是调用C，那么AB出栈。
+
+**第四种地洞模式-单实例模式**
+这就是一个加强版的`singleTask`。以这种模式启动的时候，系统会新开一个任务栈，并且只允许这一个activity运行在这里面。例如很多分享界面都是采用这模式的。
+加入你使用知乎通过qq分享给你的好友，在分享的页面使用按下home键，这时候在打开qq的时候你会发现直接到了分享的界面中了。
+
+我们可以通过`android：taskAffinity`属性来指定启动模式，也可以在通过在`intent`中添加flag来指定。
+
+
+
 
 
 
