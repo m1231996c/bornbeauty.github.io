@@ -53,6 +53,10 @@ onPostCreate()将会在activity加载完成后被调用(在onCreate()和onRestor
 >The foreground lifetime of an activity happens between a call to onResume() until a corresponding call to onPause(). During this time the activity is in front of all other activities and interacting with the user. An activity can frequently go between the resumed and paused states -- for example when the device goes to sleep, when an activity result is delivered, when a new intent is delivered -- so the code in these methods should be fairly lightweight.
 
 这里暂且一放，改日代码测试；
+***2015年11月13日19:49:38:***
+<u>测试后发现，无论是锁屏还是dialog遮盖均是onPause()调用后onStop()立即被调用，没有出现只调用onPause()的情况，印证了作者的说的话。当然，我觉得既然google设置了onPause和onStop两个回调必然有他的理由，所以再以后的开发中可以留意一下。</u>
+
+
 
 ***这里需要注意的是：不要在onPause()中一些重量级的回收工作 根据官方文档所说，只有在onPause()结束后，下一个activity才会重新开始***
 
