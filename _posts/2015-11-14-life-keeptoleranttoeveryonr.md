@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 对一点宽容给这个狂躁的世界
+title: 多一点宽容给这个狂躁的世界
 category: 生活
 tags: life
 description: 看到垃圾人定律这个定律 我终于有了不装强势的理由了 
