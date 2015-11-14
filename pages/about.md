@@ -92,7 +92,7 @@ permalink: /pages/about.html
 				Email：
 			</td>  
 			<td>
-				zhongjinbao1994@gmail.com			
+				<A href="mailto:zhongjinbao1994@gmail.com ">zhongjinbao1994@gmail.com</A>			
 			</td>
 		</tr>
 
