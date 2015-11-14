@@ -71,7 +71,15 @@ permalink: /pages/about.html
 		</tr>
 		<tr>
 			<td>学  校：</td>    
-			<td>山东师范大学信工学院</td>
+			<td>山东师范大学</td>
+		</tr>
+		<tr>
+			<td>专  业：</td>    
+			<td>计算机科学与技术</td>
+		</tr>
+		<tr>
+			<td>时  间：</td>    
+			<td>2013年入学至今</td>
 		</tr>
 	</table>
 
@@ -84,7 +92,7 @@ permalink: /pages/about.html
 				Email：
 			</td>  
 			<td>
-				zhongjinbao@outlook.com			
+				zhongjinbao1994@gmail.com			
 			</td>
 		</tr>
 
