@@ -41,6 +41,15 @@ export PATH="yourPathWantToBeSetted:$PATH"
 source .bashrc
 //验证
 echo $PATH
-//写一个shell放在目录下 就不会每次都git add commit...了 一个命令同步博客 咩哈哈 爽~
 ```
+```java
+//写一个shell放在目录下 就不会每次都add commit psuh了 一个命令同步博客 咩哈哈 爽~
+/**
+cd /home/jimbo/bornbeauty.github.io
+git add -A
+git commit -m "addOrchange"
+git push
+*/
+```
+
 
