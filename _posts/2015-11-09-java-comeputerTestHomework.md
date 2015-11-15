@@ -44,289 +44,281 @@ description:
 
 >SymbolEntity.java类
 
-```java
-public class SymbolEntity {
-	private String symbol;
-	private int lineNumber;
-	private String lineContent;
-	private int symbolNumber;
+	public class SymbolEntity {
+		private String symbol;
+		private int lineNumber;
+		private String lineContent;
+		private int symbolNumber;
 
-	public SymbolEntity(String symbol, int lineNumber, String lineContent, int symbolNumber) {
-		this.symbol = symbol;
-		this.lineNumber = lineNumber;
-		this.lineContent = lineContent;
-		this.symbolNumber = symbolNumber;
+		public SymbolEntity(String symbol, int lineNumber, String lineContent, int symbolNumber) {
+			this.symbol = symbol;
+			this.lineNumber = lineNumber;
+			this.lineContent = lineContent;
+			this.symbolNumber = symbolNumber;
+		}
+
+		public String getSymbol() {
+			return symbol;
+		}
+
+		public int getLineNumber() {
+			return lineNumber;
+		}
+
+		public String getLineContent() {
+			return lineContent;
+		}
+
+		public int getSymbolNumber() {
+			return symbolNumber;
+		}
 	}
 
-	public String getSymbol() {
-		return symbol;
+>ErrorDescription.java类
+
+	 public class ErrorDescription {
+		private int errorLineNumber;
+		private String errorDes;
+
+		public ErrorDescription() {
+		}
+
+		public ErrorDescription(int errorLineNumber, String errorDes) {
+			this.errorLineNumber = errorLineNumber;
+			this.errorDes = errorDes;
+		}
+
+		public int getErrorLineNumber() {
+			return errorLineNumber;
+		}
+
+		public String getErrorDes() {
+			return errorDes;
+		}
+
+		public void setErrorLineNumber(int errorLineNumber) {
+			this.errorLineNumber = errorLineNumber;
+		}
+
+		public void setErrorDes() {
+			this.errorDes = errorDes;
+		}
 	}
-
-	public int getLineNumber() {
-		return lineNumber;
-	}
-
-	public String getLineContent() {
-		return lineContent;
-	}
-
-	public int getSymbolNumber() {
-		return symbolNumber;
-	}
-}
-```
-
- >ErrorDescription.java类
-
- 
-```java
- public class ErrorDescription {
-	private int errorLineNumber;
-	private String errorDes;
-
-	public ErrorDescription() {
-	}
-
-	public ErrorDescription(int errorLineNumber, String errorDes) {
-		this.errorLineNumber = errorLineNumber;
-		this.errorDes = errorDes;
-	}
-
-	public int getErrorLineNumber() {
-		return errorLineNumber;
-	}
-
-	public String getErrorDes() {
-		return errorDes;
-	}
-
-	public void setErrorLineNumber(int errorLineNumber) {
-		this.errorLineNumber = errorLineNumber;
-	}
-
-	public void setErrorDes() {
-		this.errorDes = errorDes;
-	}
-}
-```
-
+    
+	
 >CheckUtil.java类
 
-```java
-import java.util.Stack;
-import java.util.*;
-import java.io.IOException;
-//要注意在代码或者注释中出现的'{','}','(',')'，也会影响我们的判断
-// {    123
-// }   125
-// (    40
-// )    41
+	import java.util.Stack;
+	import java.util.*;
+	import java.io.IOException;
+	//要注意在代码或者注释中出现的'{','}','(',')'，也会影响我们的判断
+	// {    123
+	// }   125
+	// (    40
+	// )    41
 
-//故意出一个错误
-// {
-public class CheckUtil {
-	private List<ErrorDescription> mErrorList = new ArrayList<>();
-	private String mFileName;
-	private ReadFile mReadFile;
-	private Stack<SymbolEntity> mStack = new Stack();
-	private boolean isOverCheck = false;
+	//故意出一个错误
+	// {
+	public class CheckUtil {
+		private List<ErrorDescription> mErrorList = new ArrayList<>();
+		private String mFileName;
+		private ReadFile mReadFile;
+		private Stack<SymbolEntity> mStack = new Stack();
+		private boolean isOverCheck = false;
 
-	public CheckUtil(ReadFile mReadFile) {
-		this.mReadFile = mReadFile;
-		mFileName = mReadFile.getFileName();
-	}
+		public CheckUtil(ReadFile mReadFile) {
+			this.mReadFile = mReadFile;
+			mFileName = mReadFile.getFileName();
+		}
 
-	public CheckUtil(String mFileName) throws NullPointerException, Exception {
-		this.mFileName = mFileName;
-		mReadFile = new ReadFile(mFileName);
-	}
+		public CheckUtil(String mFileName) throws NullPointerException, Exception {
+			this.mFileName = mFileName;
+			mReadFile = new ReadFile(mFileName);
+		}
 
-	public boolean startCheck() throws IOException {
+		public boolean startCheck() throws IOException {
 
-		String lineContent = "";
+			String lineContent = "";
 		
-		while(null != (lineContent = mReadFile.next())) {
-			for (int i = 0; i < lineContent.length(); i++) {
-				switch(lineContent.charAt(i)) {
-					case 123: 
-						mStack.push(new SymbolEntity(String.valueOf((char)123), 
+			while(null != (lineContent = mReadFile.next())) {
+				for (int i = 0; i < lineContent.length(); i++) {
+					switch(lineContent.charAt(i)) {
+						case 123: 
+							mStack.push(new SymbolEntity(String.valueOf((char)123), 
 							mReadFile.getLineNumber(),
 							lineContent,
 							i+1));
+							break;
+						case 40:
+							mStack.push(new SymbolEntity(String.valueOf((char)40), 
+							mReadFile.getLineNumber(),
+							lineContent,
+							i+1));
+							break;
+						case 125:
+							dealChar((char)125, (char)123, lineContent, i+1);
+							break;
+						case 41:
+							dealChar((char)41, (char)40, lineContent, i+1);
+							break;
+					}
+				}
+			}
+
+			while (!mStack.isEmpty()) {
+				SymbolEntity entity = mStack.pop();
+				switch(entity.getSymbol().charAt(0)) {
+					case 123:
+						buildError(entity, (char)125);
 						break;
 					case 40:
-						mStack.push(new SymbolEntity(String.valueOf((char)40), 
-							mReadFile.getLineNumber(),
-							lineContent,
-							i+1));
-						break;
-					case 125:
-						dealChar((char)125, (char)123, lineContent, i+1);
-						break;
-					case 41:
-						dealChar((char)41, (char)40, lineContent, i+1);
+						buildError(entity, (char)41);
 						break;
 				}
 			}
-		}
 
-		while (!mStack.isEmpty()) {
-			SymbolEntity entity = mStack.pop();
-			switch(entity.getSymbol().charAt(0)) {
-				case 123:
-					buildError(entity, (char)125);
-					break;
-				case 40:
-					buildError(entity, (char)41);
-					break;
+			isOverCheck = true;
+		
+			if (0 == mErrorList.size()) {
+				return true;
+			} else {
+				return false;
 			}
 		}
 
-		isOverCheck = true;
-		
-		if (0 == mErrorList.size()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+		private void dealChar(char currentChar, char oppositeSymbol, String lineContent, int symbolNumber) {
 
-	private void dealChar(char currentChar, char oppositeSymbol, String lineContent, int symbolNumber) {
-
-		if (!mStack.isEmpty()) {
-			SymbolEntity entity = mStack.peek();
-			if (entity.getSymbol().charAt(0) != oppositeSymbol) {
-				buildError(new SymbolEntity(String.valueOf(currentChar), 
+			if (!mStack.isEmpty()) {
+				SymbolEntity entity = mStack.peek();
+				if (entity.getSymbol().charAt(0) != oppositeSymbol) {
+					buildError(new SymbolEntity(String.valueOf(currentChar), 
 					mReadFile.getLineNumber(), lineContent, symbolNumber), oppositeSymbol);		
+				} else {
+					mStack.pop();
+				}	
 			} else {
-				mStack.pop();
-			}	
-		} else {
-			buildError(new SymbolEntity(String.valueOf(currentChar), 
+				buildError(new SymbolEntity(String.valueOf(currentChar), 
 					mReadFile.getLineNumber(), lineContent, symbolNumber), oppositeSymbol);	
+			}
 		}
-	}
 
-	private void buildError(SymbolEntity entity, char missSymbol) {
-		//在什么什么文件里，第多少多少行的什么没有什么与之配对
-		String result = "在" + mFileName + "中," + "第" + (entity.getLineNumber()+1) +
+		private void buildError(SymbolEntity entity, char missSymbol) {
+			//在什么什么文件里，第多少多少行的什么没有什么与之配对
+			String result = "在" + mFileName + "中," + "第" + (entity.getLineNumber()+1) +
 				"行的\"" + entity.getSymbol() + "\"没有\"" + missSymbol + "\"与之配对\n"
 				+ entity.getLineContent() + "\n";
 
-		for (int i = 1; i < entity.getSymbolNumber(); i++) {
-			result += " ";
+			for (int i = 1; i < entity.getSymbolNumber(); i++) {
+				result += " ";
+			}
+
+			result += "^";
+
+			mErrorList.add(new ErrorDescription(
+					entity.getLineNumber(),
+					result)
+			);
+		}	
+	
+		public boolean isChecked() {
+			return isOverCheck;
 		}
 
-		result += "^";
-
-		mErrorList.add(new ErrorDescription(
-				entity.getLineNumber(),
-				result)
-		);
-	}
-
-	public boolean isChecked() {
-		return isOverCheck;
-	}
-
-	public List<ErrorDescription> getErrorList() {
-		if (isOverCheck) {
-			return mErrorList;
-		} else {
-			return null;
+		public List<ErrorDescription> getErrorList() {
+			if (isOverCheck) {
+				return mErrorList;
+			} else {
+				return null;
+			}
 		}
 	}
-}
-```
 
 >ReadFile.java类
 
-```java
-import java.io.*;
+	import java.io.*;
 
-public class ReadFile {
-	//{
-	private String mFileName;			// file path
-	private int mCurrentLine = 0;			// current line number
-	private BufferedReader mBufferReader;	// read file class
+	public class ReadFile {
+		//{
+		private String mFileName;			// file path
+		private int mCurrentLine = 0;			// current line number
+		private BufferedReader mBufferReader;	// read file class
 
-	public ReadFile() {
-	}
-
-	public ReadFile(String mFileName) throws NullPointerException,Exception {
-		if (null == mFileName) {
-			throw new NullPointerException("file name is not allowed to be null");
+		public ReadFile() {
 		}
 
-		if (!(new File(mFileName).isFile())) {
-			throw new Exception("this filename is not a file");
-		}
+		public ReadFile(String mFileName) throws NullPointerException,Exception {
+			if (null == mFileName) {
+				throw new NullPointerException("file name is not allowed to be null");
+			}
 
-		this.mFileName = mFileName;
+			if (!(new File(mFileName).isFile())) {
+				throw new Exception("this filename is not a file");
+			}
 
-		mBufferReader = new BufferedReader(new 
+			this.mFileName = mFileName;
+
+			mBufferReader = new BufferedReader(new 
 			FileReader(mFileName));
+		}
+
+		public String next() throws IOException {
+			mCurrentLine++;
+			return mBufferReader.readLine();
+		}
+
+		public int getLineNumber() {
+			return mCurrentLine;
+		}
+
+		public String getFileName() {
+			return mFileName;
+		}
 	}
 
-	public String next() throws IOException {
-		mCurrentLine++;
-		return mBufferReader.readLine();
-	}
-
-	public int getLineNumber() {
-		return mCurrentLine;
-	}
-
-	public String getFileName() {
-		return mFileName;
-	}
-}
-```
 
 >Main.java类 该类就是来测试其他类
 
-```java
-import java.util.*;
-import java.io.*;
-import java.util.regex.*;
+	import java.util.*;
+	import java.io.*;
+	import java.util.regex.*;
 
-public class Main{
-	public static void main(String[] args) {
+	public class Main{
+		public static void main(String[] args) {
 		
-		File file = file = new File(".");
-		final String regex = ".java";
-		String[] list = file.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String name) {
-				return name.contains(regex);
-			}
-		});
-	
-		Arrays.sort(list, String.CASE_INSENSITIVE_ORDER);
-		String s = "";
-		List<ErrorDescription> lists = new ArrayList<>();
-		for (String name : list) {
-			try {	
-				//System.out.println(name);
-				ReadFile r = new ReadFile(name);
-				CheckUtil c = new CheckUtil(r);
-				if (c.startCheck()) {
-					System.out.println(name +":没有错误");
-				} else {
-					lists.addAll(c.getErrorList());
+			File file = file = new File(".");
+			final String regex = ".java";
+			String[] list = file.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File file, String name) {
+					return name.contains(regex);
 				}
-			} catch(Exception e) {
-				System.out.println("出现未捕获的异常，信息如下：");
-				e.printStackTrace();
-				System.exit(-1);
+			});
+	
+			Arrays.sort(list, String.CASE_INSENSITIVE_ORDER);
+			String s = "";
+			List<ErrorDescription> lists = new ArrayList<>();
+			for (String name : list) {
+				try {	
+					//System.out.println(name);
+					ReadFile r = new ReadFile(name);
+					CheckUtil c = new CheckUtil(r);
+					if (c.startCheck()) {
+						System.out.println(name +":没有错误");
+					} else {
+						lists.addAll(c.getErrorList());
+					}
+				} catch(Exception e) {
+					System.out.println("出现未捕获的异常，信息如下：");
+					e.printStackTrace();
+					System.exit(-1);
+				}
 			}
-		}
-		for (ErrorDescription e : lists) {
-			System.out.println(e.getErrorDes());
+			for (ErrorDescription e : lists) {
+				System.out.println(e.getErrorDes());
+			}
 		}
 	}
-}
-```
+
 
 
 
