@@ -2,7 +2,7 @@
 layout: post
 title: hello world
 category: 技术
-tags: java android linux
+tags: 
 description: 
 ---
 
