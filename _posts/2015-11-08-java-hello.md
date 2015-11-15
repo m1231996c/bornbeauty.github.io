@@ -1,8 +1,8 @@
 ---
 layout: post
 title: hello world
-category: 技术
-tags: java android linux
+category: 生活
+tags:  life
 description: 
 ---
 
